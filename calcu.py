@@ -1,59 +1,98 @@
+import streamlit as st
 import math
 
-def calculadora_avanzada():
-    print("--- Calculadora Python: Edición Científica ---")
-    print("Opciones:")
-    print("1. Suma (+) | 2. Resta (-) | 3. Multiplicación (*)")
-    print("4. División (/) | 5. Raíz Cuadrada (√) | 6. Usar Pi (π)")
-    print("7. Elevar al cuadrado (x²) | 8. Salir")
+# Configuración de la página
+st.set_page_config(page_title="Calculadora Móvil", page_icon="📱")
 
-    while True:
-        opcion = input("\nSelecciona una opción (1-8): ")
+# --- ESTILO CSS PARA ASPECTO DE TELÉFONO ---
+st.markdown("""
+    <style>
+    .stButton > button {
+        width: 100%;
+        height: 60px;
+        border-radius: 50px;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 5px 0px;
+    }
+    /* Estilo para el área del resultado */
+    .result-screen {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: right;
+        font-size: 40px;
+        color: white;
+        margin-bottom: 20px;
+        border: 1px solid #333;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-        if opcion == '8':
-            print("¡Hasta luego!")
-            break
+def main():
+    st.title("Calculadora Web Pro")
 
-        try:
-            # Operaciones básicas que requieren dos números
-            if opcion in ['1', '2', '3', '4']:
-                n1 = float(input("Primer número: "))
-                n2 = float(input("Segundo número: "))
-                
-                if opcion == '1': print(f"Resultado: {n1 + n2}")
-                elif opcion == '2': print(f"Resultado: {n1 - n2}")
-                elif opcion == '3': print(f"Resultado: {n1 * n2}")
-                elif opcion == '4':
-                    if n2 == 0: print("Error: No se puede dividir por cero.")
-                    else: print(f"Resultado: {n1 / n2}")
+    # Inicializar el estado para los números si no existen
+    if 'resultado' not in st.session_state:
+        st.session_state.resultado = "0"
 
-            # Raíz Cuadrada
-            elif opcion == '5':
-                n = float(input("Número para extraer raíz: "))
-                if n < 0:
-                    print("Error: No existe raíz real de un número negativo.")
-                else:
-                    print(f"Resultado: √{n} = {math.sqrt(n)}")
+    # Pantalla de visualización (como la de un móvil)
+    st.markdown(f'<div class="result-screen">{st.session_state.resultado}</div>', unsafe_allow_html=True)
 
-            # Constante Pi
-            elif opcion == '6':
-                print(f"El valor de Pi es aproximadamente: {math.pi}")
-                multiplicar = input("¿Quieres multiplicarlo por algún número? (s/n): ")
-                if multiplicar.lower() == 's':
-                    n = float(input("Multiplicar π por: "))
-                    print(f"Resultado: {n} * π = {n * math.pi}")
+    # Entradas de números
+    col_n1, col_n2 = st.columns(2)
+    with col_n1:
+        n1 = st.number_input("Primer número", value=0.0, format="%.2f")
+    with col_n2:
+        n2 = st.number_input("Segundo número", value=0.0, format="%.2f")
 
-            # Elevar al cuadrado (LO NUEVO)
-            elif opcion == '7':
-                n = float(input("Número a elevar al cuadrado: "))
-                resultado = n ** 2  # También podrías usar math.pow(n, 2)
-                print(f"Resultado: {n}² = {resultado}")
-
+    st.write("### Operaciones")
+    
+    # Fila 1: Operaciones Básicas
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        if st.button("Sumar"):
+            st.session_state.resultado = str(n1 + n2)
+            st.rerun()
+    with c2:
+        if st.button("Restar"):
+            st.session_state.resultado = str(n1 - n2)
+            st.rerun()
+    with c3:
+        if st.button("Multiplicar"):
+            st.session_state.resultado = str(n1 * n2)
+            st.rerun()
+    with c4:
+        if st.button("Dividir"):
+            if n2 != 0:
+                st.session_state.resultado = str(n1 / n2)
             else:
-                print("Opción no válida.")
-                
-        except ValueError:
-            print("Error: Entrada no válida. Por favor, usa números.")
+                st.session_state.resultado = "Error"
+            st.rerun()
 
-# ¡No olvides esta línea! Es la que hace que el programa arranque.
-calculadora_avanzada()
+    st.write("### Especiales")
+    
+    # Fila 2: Funciones Especiales
+    ce1, ce2, ce3, ce4 = st.columns(4)
+    with ce1:
+        if st.button("Raíz √"):
+            if n1 >= 0:
+                st.session_state.resultado = str(round(math.sqrt(n1), 4))
+            else:
+                st.session_state.resultado = "Error"
+            st.rerun()
+    with ce2:
+        if st.button("x²"):
+            st.session_state.resultado = str(n1 ** 2)
+            st.rerun()
+    with ce3:
+        if st.button("π"):
+            st.session_state.resultado = str(round(math.pi, 4))
+            st.rerun()
+    with ce4:
+        if st.button("AC", help="Limpiar"):
+            st.session_state.resultado = "0"
+            st.rerun()
+
+if __name__ == "__main__":
+    main()
