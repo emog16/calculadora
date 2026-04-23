@@ -1,98 +1,49 @@
-import streamlit as st
 import math
 
-# Configuración de la página
-st.set_page_config(page_title="Calculadora Móvil", page_icon="📱")
+def calculadora():
+    print("--- Calculadora Pro ---")
+    print("1. Sumar")
+    print("2. Restar")
+    print("3. Multiplicar")
+    print("4. Dividir")
+    print("5. Raíz Cuadrada")
+    print("6. Elevar al cuadrado")
+    print("7. Ver valor de PI")
+    print("8. Salir")
 
-# --- ESTILO CSS PARA ASPECTO DE TELÉFONO ---
-st.markdown("""
-    <style>
-    .stButton > button {
-        width: 100%;
-        height: 60px;
-        border-radius: 50px;
-        font-size: 20px;
-        font-weight: bold;
-        margin: 5px 0px;
-    }
-    /* Estilo para el área del resultado */
-    .result-screen {
-        background-color: #1e1e1e;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: right;
-        font-size: 40px;
-        color: white;
-        margin-bottom: 20px;
-        border: 1px solid #333;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    while True:
+        opcion = input("\nSelecciona una opción (1-8): ")
 
-def main():
-    st.title("Calculadora Web Pro")
+        if opcion == '8':
+            print("¡Nos vemos!")
+            break
 
-    # Inicializar el estado para los números si no existen
-    if 'resultado' not in st.session_state:
-        st.session_state.resultado = "0"
+        if opcion in ['1', '2', '3', '4']:
+            num1 = float(input("Primer número: "))
+            num2 = float(input("Segundo número: "))
 
-    # Pantalla de visualización (como la de un móvil)
-    st.markdown(f'<div class="result-screen">{st.session_state.resultado}</div>', unsafe_allow_html=True)
+            if opcion == '1': print(f"Resultado: {num1 + num2}")
+            elif opcion == '2': print(f"Resultado: {num1 - num2}")
+            elif opcion == '3': print(f"Resultado: {num1 * num2}")
+            elif opcion == '4': 
+                if num2 != 0: print(f"Resultado: {num1 / num2}")
+                else: print("Error: No se puede dividir por cero.")
 
-    # Entradas de números
-    col_n1, col_n2 = st.columns(2)
-    with col_n1:
-        n1 = st.number_input("Primer número", value=0.0, format="%.2f")
-    with col_n2:
-        n2 = st.number_input("Segundo número", value=0.0, format="%.2f")
-
-    st.write("### Operaciones")
-    
-    # Fila 1: Operaciones Básicas
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        if st.button("Sumar"):
-            st.session_state.resultado = str(n1 + n2)
-            st.rerun()
-    with c2:
-        if st.button("Restar"):
-            st.session_state.resultado = str(n1 - n2)
-            st.rerun()
-    with c3:
-        if st.button("Multiplicar"):
-            st.session_state.resultado = str(n1 * n2)
-            st.rerun()
-    with c4:
-        if st.button("Dividir"):
-            if n2 != 0:
-                st.session_state.resultado = str(n1 / n2)
+        elif opcion == '5':
+            num = float(input("Número para raíz cuadrada: "))
+            if num >= 0:
+                print(f"Resultado: {math.sqrt(num)}")
             else:
-                st.session_state.resultado = "Error"
-            st.rerun()
+                print("Error: No existe raíz de número negativo.")
 
-    st.write("### Especiales")
-    
-    # Fila 2: Funciones Especiales
-    ce1, ce2, ce3, ce4 = st.columns(4)
-    with ce1:
-        if st.button("Raíz √"):
-            if n1 >= 0:
-                st.session_state.resultado = str(round(math.sqrt(n1), 4))
-            else:
-                st.session_state.resultado = "Error"
-            st.rerun()
-    with ce2:
-        if st.button("x²"):
-            st.session_state.resultado = str(n1 ** 2)
-            st.rerun()
-    with ce3:
-        if st.button("π"):
-            st.session_state.resultado = str(round(math.pi, 4))
-            st.rerun()
-    with ce4:
-        if st.button("AC", help="Limpiar"):
-            st.session_state.resultado = "0"
-            st.rerun()
+        elif opcion == '6':
+            num = float(input("Número a elevar al cuadrado: "))
+            print(f"Resultado: {num**2}")
 
-if __name__ == "__main__":
-    main()
+        elif opcion == '7':
+            print(f"El valor de PI es: {math.pi}")
+
+        else:
+            print("Opción no válida.")
+
+calculadora()
